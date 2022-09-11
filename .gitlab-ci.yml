@@ -24,6 +24,7 @@ stages:
   - build
   - query
   - report
+  - pages
 
 build:
   stage: build
@@ -45,3 +46,13 @@ report:
   artifacts:
     paths:
       - build/
+
+pages:
+  stage: pages
+  script:
+    - mv build/web public
+  artifacts:
+    paths:
+      - public
+  only:
+    - main
