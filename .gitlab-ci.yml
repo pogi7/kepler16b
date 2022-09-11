@@ -15,19 +15,24 @@ image: gradle:jdk11
 # isolated from any previous builds.
 variables:
   GRADLE_OPTS: "-Dorg.gradle.daemon=false"
-
+  
 before_script:
   - GRADLE_USER_HOME="$(pwd)/.gradle"
   - export GRADLE_USER_HOME
 
+stages:
+  - download-oml
+  - oml-to-owl
+  - owl-reason
+
 omlDependencies:
-  stage: build
+  stage: download-oml
   script: ./gradlew omlDependencies
 
 omlToOwl:
-  stage: build
+  stage: oml-to-owl
   script: ./gradlew omlToOwl -x omlDependencies
 
 owlReason:
-  stage: build
+  stage: owl-reason
   script: ./gradlew owlReason -x omlToOwl
