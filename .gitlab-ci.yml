@@ -41,7 +41,7 @@ query:
 
 report:
   stage: report
-  script: ./gradlew generateWebsite
+  script: ./gradlew generateWebsite -x owlQuery
   artifacts:
     paths:
       - build/
