@@ -33,31 +33,55 @@ stages:
 omlDependencies:
   stage: download
   script: ./gradlew omlDependencies
+  artifacts:
+    paths:
+      - build/
 
 omlToOwl:
   stage: convert
   script: ./gradlew omlToOwl -x omlDependencies
+  artifacts:
+    paths:
+      - build/
 
 owlReason:
   stage: build
   script: ./gradlew owlReason -x omlToOwl
+  artifacts:
+    paths:
+      - build/
 
 startFuseki:
   stage: start-server
   script: ./gradlew startFuseki
+  artifacts:
+    paths:
+      - .fuseki/
 
 owlLoad:
   stage: load
   script: ./gradlew owlLoad -x owlReason
+  artifacts:
+    paths:
+      - build/
 
 owlQuery:
   stage: query
   script: ./gradlew owlQuery -x owlLoad
+  artifacts:
+    paths:
+      - build/
 
 stopFuseki:
   stage: stop-server
   script: ./gradlew stopFuseki
+  artifacts:
+    paths:
+      - .fuseki/
 
 generateWebsite:
   stage: report
   script: ./gradlew generateWebsite
+  artifacts:
+    paths:
+      - build/
