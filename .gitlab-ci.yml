@@ -21,20 +21,20 @@ before_script:
   - export GRADLE_USER_HOME
 
 stages:
-  - build
-  - query
+  - check
+  - analyze
   - report
-  - pages
+  - publish
 
-build:
-  stage: build
+check:
+  stage: check
   script: ./gradlew build
   artifacts:
     paths:
       - build/
 
-query:
-  stage: query
+analyze:
+  stage: analyze
   script: ./gradlew startFuseki owlQuery stopFuseki -x owlReason
   artifacts:
     paths:
@@ -48,7 +48,7 @@ report:
       - build/
 
 pages:
-  stage: pages
+  stage: publish
   script:
     - mv build/web public
   artifacts:
