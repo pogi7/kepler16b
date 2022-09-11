@@ -21,65 +21,25 @@ before_script:
   - export GRADLE_USER_HOME
 
 stages:
-  - download
-  - convert
   - build
-  - start-server
-  - load
   - query
-  - stop-server
   - report
 
-omlDependencies:
-  stage: download
-  script: ./gradlew omlDependencies
-  artifacts:
-    paths:
-      - build/
-
-omlToOwl:
-  stage: convert
-  script: ./gradlew omlToOwl -x omlDependencies
-  artifacts:
-    paths:
-      - build/
-
-owlReason:
+build:
   stage: build
-  script: ./gradlew owlReason -x omlToOwl
+  script: ./gradlew build
   artifacts:
     paths:
       - build/
 
-startFuseki:
-  stage: start-server
-  script: ./gradlew startFuseki
-  artifacts:
-    paths:
-      - .fuseki/
-
-owlLoad:
-  stage: load
-  script: ./gradlew owlLoad -x owlReason
-  artifacts:
-    paths:
-      - build/
-
-owlQuery:
+query:
   stage: query
-  script: ./gradlew owlQuery -x owlLoad
+  script: ./gradlew startFuseki owlQuery stop-server -x owlReason
   artifacts:
     paths:
       - build/
 
-stopFuseki:
-  stage: stop-server
-  script: ./gradlew stopFuseki
-  artifacts:
-    paths:
-      - .fuseki/
-
-generateWebsite:
+report:
   stage: report
   script: ./gradlew generateWebsite
   artifacts:
