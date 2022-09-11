@@ -21,18 +21,43 @@ before_script:
   - export GRADLE_USER_HOME
 
 stages:
-  - download-oml
-  - oml-to-owl
-  - owl-reason
+  - download
+  - convert
+  - build
+  - start-server
+  - load
+  - query
+  - stop-server
+  - report
 
 omlDependencies:
-  stage: download-oml
+  stage: download
   script: ./gradlew omlDependencies
 
 omlToOwl:
-  stage: oml-to-owl
+  stage: convert
   script: ./gradlew omlToOwl -x omlDependencies
 
 owlReason:
-  stage: owl-reason
+  stage: build
   script: ./gradlew owlReason -x omlToOwl
+
+startFuseki:
+  stage: start-server
+  script: ./gradlew startFuseki
+
+owlLoad:
+  stage: load
+  script: ./gradlew owlLoad -x owlReason
+
+owlQuery:
+  stage: query
+  script: ./gradlew owlQuery -x owlLoad
+
+stopFuseki:
+  stage: stop-server
+  script: ./gradlew stopFuseki
+
+generateWebsite:
+  stage: report
+  script: ./gradlew generateWebsite
