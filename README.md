@@ -1,5 +1,8 @@
 # Kepler 16b
 
+[![Pipeline](https://gitlab.com/melaasar/kepler16b/badges/main/pipeline.svg?key_text=Pipeline)](https://melaasar.gitlab.io/kepler16b/) 
+[![Pages](https://img.shields.io/badge/Pages-HTML-blue)](https://melaasar.gitlab.io/kepler16b/) 
+
 This is an example Oml project for a hypothetical mission called Kepler 16b.
 
 ## Clone
