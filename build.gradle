@@ -114,17 +114,12 @@ task startFuseki(type: io.opencaesar.owl.fuseki.StartFusekiTask, group:"oml") {
     outputFolderPath = file('.fuseki')
 }
 
-/*
- * Stop the headless Fuseki server
- */
-task stopFuseki(type: io.opencaesar.owl.fuseki.StopFusekiTask, group:"oml") {
-    outputFolderPath = file('.fuseki')
-}
 
 /*
  * A task to load an OWL catalog to a Fuseki dataset endpoint
  */
 task owlLoad(type:io.opencaesar.owl.load.OwlLoadTask, group:"oml", dependsOn: owlReason) {
+	mustRunAfter startFuseki
     catalogPath = file('build/owl/catalog.xml')
     endpointURL = "http://localhost:3030/$dataset.name".toString()
     fileExtensions = ['owl', 'ttl']
@@ -145,9 +140,19 @@ task owlQuery(type:io.opencaesar.owl.query.OwlQueryTask, group:"oml", dependsOn:
     format = 'json'
 }
 
-import org.apache.tools.ant.filters.*
+/*
+ * Stop the headless Fuseki server
+ */
+task stopFuseki(type: io.opencaesar.owl.fuseki.StopFusekiTask, group:"oml") {
+	mustRunAfter owlQuery, owlLoad
+    outputFolderPath = file('.fuseki')
+}
 
-task generateWebsite(group:"oml") {
+/*
+ * Generate the website with reports
+ */
+import org.apache.tools.ant.filters.*
+task generateWebsite(group:"oml", dependsOn: owlQuery) {
 	copy {
 	    from 'src/web'
 	    into 'build/web'
