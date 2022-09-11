@@ -34,7 +34,7 @@ build:
 
 query:
   stage: query
-  script: ./gradlew startFuseki owlQuery stop-server -x owlReason
+  script: ./gradlew startFuseki owlQuery stopFuseki -x owlReason
   artifacts:
     paths:
       - build/
