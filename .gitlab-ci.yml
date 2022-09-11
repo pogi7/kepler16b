@@ -22,11 +22,12 @@ before_script:
 
 omlDependencies:
   stage: build
-  script: ./gradlew --build-cache omlDependencies
-  cache:
-    key: "$CI_COMMIT_REF_NAME"
-    policy: push
-    paths:
-      - build
-      - .gradle
+  script: ./gradlew omlDependencies
 
+omlToOwl:
+  stage: build
+  script: ./gradlew omlToOwl -x omlDependencies
+
+owlReason:
+  stage: build
+  script: ./gradlew owlReason -x omlToOwl
