@@ -30,6 +30,7 @@ check:
   stage: check
   script: ./gradlew build
   artifacts:
+    when: always
     paths:
       - build/
 
@@ -37,6 +38,7 @@ analyze:
   stage: analyze
   script: ./gradlew startFuseki owlQuery stopFuseki -x owlReason
   artifacts:
+    when: always
     paths:
       - build/
 
@@ -44,6 +46,7 @@ report:
   stage: report
   script: ./gradlew generateWebsite -x owlQuery
   artifacts:
+    when: always
     paths:
       - build/
 
@@ -52,6 +55,7 @@ pages:
   script:
     - mv build/web public
   artifacts:
+    when: always
     paths:
       - public
   only:
