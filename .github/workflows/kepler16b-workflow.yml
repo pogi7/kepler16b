@@ -23,6 +23,7 @@ jobs:
   # Job name
   kepler16b-workflow:
     runs-on: ubuntu-latest
+    container: gradle:jdk11
     steps:
       # Checks out your repository under $GITHUB_WORKSPACE, so your job can access it
       # @v3 = Major version 3
