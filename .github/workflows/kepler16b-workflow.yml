@@ -25,6 +25,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       # Checks out your repository under $GITHUB_WORKSPACE, so your job can access it
+      # @v3 = Major version 3
       - name: Checkout code
         uses: actions/checkout@v3
 
@@ -41,7 +42,8 @@ jobs:
       - name: check
         run: ./gradlew build
 
-      - uses: actions/upload-artifact@v2
+      - name: Upload Check Artifacts 
+        uses: actions/upload-artifact@v2
         with: 
           name: check-artifacts
           path: build
@@ -49,7 +51,8 @@ jobs:
       - name: analyze
         run: ./gradlew startFuseki owlQuery stopFuseki -x owlReason
 
-      - uses: actions/upload-artifact@v2
+      - name: Upload Analyze Artifacts 
+        uses: actions/upload-artifact@v2
         with: 
           name: analyze-artifacts
           path: build
@@ -57,7 +60,8 @@ jobs:
       - name: report
         run: ./gradlew generateWebsite -x owlQuery
 
-      - uses: actions/upload-artifact@v2
+      - name: Upload Report Artifacts 
+        uses: actions/upload-artifact@v2
         with: 
           name: report-artifacts
           path: build
@@ -66,7 +70,8 @@ jobs:
         run: mv build/web public
         if: ${{ github.ref_name == 'main' }} # Run job on main branch only
 
-      - uses: actions/upload-artifact@v2 [MAIN]
+      - name: Upload Pages Artifacts [MAIN]
+        uses: actions/upload-artifact@v2
         with: 
           name: pages-artifacts
           path: public
