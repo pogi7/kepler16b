@@ -43,7 +43,7 @@ jobs:
         run: ./gradlew build
 
       - name: Upload Check Artifacts 
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with: 
           name: check-artifacts
           path: build
@@ -52,7 +52,7 @@ jobs:
         run: ./gradlew startFuseki owlQuery stopFuseki -x owlReason
 
       - name: Upload Analyze Artifacts 
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with: 
           name: analyze-artifacts
           path: build
@@ -61,7 +61,7 @@ jobs:
         run: ./gradlew generateWebsite -x owlQuery
 
       - name: Upload Report Artifacts 
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with: 
           name: report-artifacts
           path: build
@@ -71,7 +71,7 @@ jobs:
         if: ${{ github.ref_name == 'main' }} # Run job on main branch only
 
       - name: Upload Pages Artifacts [MAIN]
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with: 
           name: pages-artifacts
           path: public
