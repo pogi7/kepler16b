@@ -6,6 +6,9 @@ on:
   push:
     branches: '**' 
     tags: '**'
+  # Read and write access is needed to publish to Github Pages
+  permissions:
+    contents: read|write
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -75,4 +78,10 @@ jobs:
         with: 
           name: pages-artifacts
           path: public
+        if: ${{ github.ref_name == 'main' }} # Run job on main branch only
+
+      - name: Deploy to Github Pages [MAIN]
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: public
         if: ${{ github.ref_name == 'main' }} # Run job on main branch only
