@@ -4,14 +4,11 @@ name: kepler16b-workflow
 on:
   # default workflow runs for all branches and tags
   push:
-    branches: '**' 
-    tags: '**'
-  # Read and write access is needed to publish to Github Pages
-  permissions:
-    contents: read|write
-
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
+    branches: ['**'] 
+    tags: ['**']
+  # Write access is needed to publish to Github Pages
+permissions:
+  contents: write
 
 # Disable the Gradle daemon for Continuous Integration servers as correctness
 # is usually a priority over speed in CI environments. Using a fresh
