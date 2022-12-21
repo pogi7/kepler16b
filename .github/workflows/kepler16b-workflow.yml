@@ -78,6 +78,10 @@ jobs:
           path: public
         if: ${{ github.ref_name == 'main' }} # Run job on main branch only
 
+      - name: Install rsync to Gradle Image [MAIN]
+        run: apt-get update && apt-get -y install rsync
+        if: ${{ github.ref_name == 'main' }} # Run job on main branch only
+
       - name: Deploy to Github Pages [MAIN]
         uses: JamesIves/github-pages-deploy-action@v4
         with:
