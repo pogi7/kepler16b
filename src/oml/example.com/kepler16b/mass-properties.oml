@@ -21,7 +21,7 @@ description <http://example.com/kepler16b/mass-properties#> as mass-properties {
 	ref ci components:lander-launch-system : mechanical:MechanicalComponent
 
 	ci lander-launch-system.mass.magnitude : mechanical:MassMagnitude [
-		vim4:hasDoubleNumber "3500"^^xsd:double
+		vim4:hasDoubleNumber "3000"^^xsd:double
 		vim4:characterizes components:lander-launch-system
 	]
 
