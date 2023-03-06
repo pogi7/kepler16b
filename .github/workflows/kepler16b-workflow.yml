@@ -1,82 +1,66 @@
-name: kepler16b-workflow
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+# This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
 
-# Controls when the workflow will run
+name: CI/CD
+
 on:
-  # default workflow runs for all branches and tags
   push:
-    branches: ['**'] 
-    tags: ['**']
-  # Write access is needed to publish to Github Pages
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
 permissions:
-  contents: write
+  contents: read
 
-# Disable the Gradle daemon for Continuous Integration servers as correctness
-# is usually a priority over speed in CI environments. Using a fresh
-# runtime for each build is more reliable since the runtime is completely
-# isolated from any previous builds.
-# Environment Variable
-env:
-  GRADLE_OPTS: "-Dorg.gradle.daemon=false"
-
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # Job name
-  kepler16b-workflow:
+  build:
     runs-on: ubuntu-latest
-    container: gradle:jdk11
     steps:
-      # Checks out your repository under $GITHUB_WORKSPACE, so your job can access it
-      # @v3 = Major version 3
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: before_script
-        run: echo "GRADLE_USER_HOME=$(pwd)/.gradle" >> $GITHUB_ENV
-
-      - name: check
-        run: ./gradlew build
-
-      - name: Upload Check Artifacts 
-        uses: actions/upload-artifact@v3
-        with: 
-          name: check-artifacts
-          path: build
-      
-      - name: analyze
-        run: ./gradlew startFuseki owlQuery stopFuseki -x owlReason
-
-      - name: Upload Analyze Artifacts 
-        uses: actions/upload-artifact@v3
-        with: 
-          name: analyze-artifacts
-          path: build
-
-      - name: report
-        run: ./gradlew generateWebsite -x owlQuery
-
-      - name: Upload Report Artifacts 
-        uses: actions/upload-artifact@v3
-        with: 
-          name: report-artifacts
-          path: build
-
-      - name: pages [MAIN]
-        run: mv build/web public
-        if: ${{ github.ref_name == 'main' }} # Run job on main branch only
-
-      - name: Upload Pages Artifacts [MAIN]
-        uses: actions/upload-artifact@v3
-        with: 
-          name: pages-artifacts
-          path: public
-        if: ${{ github.ref_name == 'main' }} # Run job on main branch only
-
-      - name: Install rsync to Gradle Image [MAIN]
-        run: apt-get update && apt-get -y install rsync
-        if: ${{ github.ref_name == 'main' }} # Run job on main branch only
-
-      - name: Deploy to Github Pages [MAIN]
-        uses: JamesIves/github-pages-deploy-action@v4
-        with:
-          folder: public
-        if: ${{ github.ref_name == 'main' }} # Run job on main branch only
+    - name: Checkout
+      uses: actions/checkout@v3
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+    - name: Setup Gradle
+      uses: gradle/gradle-build-action@v2
+    - name: Check
+      run: ./gradlew build
+    - name: Analyze
+      run: ./gradlew startFuseki query stopFuseki -x reason
+    - name: Render
+      run: ./gradlew render -x query
+    - name: Bikeshed
+      uses: netwerk-digitaal-erfgoed/bikeshed-action@v1
+      with:
+        source: src/bs/index.bs
+        destination: build/web/index.html
+    - name: Upload
+      if: ${{ always() }}
+      uses: actions/upload-artifact@v3
+      with:
+        name: build
+        path: build/
+    - name: Publish
+      uses: actions/upload-pages-artifact@v1
+      with:
+        path: build/web/
+        
+  deploy:
+    needs: build
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v1
