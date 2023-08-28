@@ -6,6 +6,7 @@ description <http://example.com/tutorial2/description/components#> as components
 	instance orbiter-launch-system : mission:Component [
 		base:hasIdentifier "C.01"
 		base:hasCanonicalName "Orbiter Launch System"
+		base:contains orbiter-power-subsystem
 	]
 	instance orbiter-spacecraft : mission:Component [
 		base:hasIdentifier "C.02"
