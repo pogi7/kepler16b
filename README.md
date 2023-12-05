@@ -1,3 +1,5 @@
+## REPO MOVED TO https://github.com/pogi7/kepler16b-example
+
 # Kepler 16b
 
 [![CI](https://github.com/opencaesar/kepler16b-example/actions/workflows/ci.yml/badge.svg)](https://github.com/opencaesar/kepler16b-example/actions/workflows/ci.yml)
